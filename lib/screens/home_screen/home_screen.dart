@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
 
 class ScreenHome extends StatelessWidget {
   const ScreenHome({super.key});
@@ -7,7 +8,7 @@ class ScreenHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
-    ValueNotifier<int> buttonNotifier = ValueNotifier(0);
+    ValueNotifier<Priorities> buttonNotifier = ValueNotifier(Priorities.today);
 
     return Scaffold(
       body: SafeArea(
@@ -72,8 +73,8 @@ class ScreenHome extends StatelessWidget {
                       children: [
                         //Today-Button-Container
                         Material(
-                          elevation: (newValue == 0) ? 5 : 0,
-                          borderRadius: (newValue == 0)
+                          elevation: (newValue == Priorities.today) ? 5 : 0,
+                          borderRadius: (newValue == Priorities.today)
                               ? BorderRadius.circular(20)
                               : null,
                           color: Colors.transparent,
@@ -82,13 +83,14 @@ class ScreenHome extends StatelessWidget {
                             height: height * 0.04,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              color: (newValue == 0)
+                              color: (newValue == Priorities.today)
                                   ? const Color.fromARGB(255, 28, 151, 132)
                                   : Colors.transparent,
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () => buttonNotifier.value = 0,
+                                onTap: () =>
+                                    buttonNotifier.value = Priorities.today,
                                 child: const Text(
                                   'Today',
                                   style: TextStyle(
@@ -103,8 +105,8 @@ class ScreenHome extends StatelessWidget {
 
                         //Tomorrow-Button-Container
                         Material(
-                          elevation: (newValue == 1) ? 5 : 0,
-                          borderRadius: (newValue == 1)
+                          elevation: (newValue == Priorities.tomorow) ? 5 : 0,
+                          borderRadius: (newValue == Priorities.tomorow)
                               ? BorderRadius.circular(20)
                               : null,
                           color: Colors.transparent,
@@ -113,13 +115,14 @@ class ScreenHome extends StatelessWidget {
                             height: height * 0.04,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              color: (newValue == 1)
+                              color: (newValue == Priorities.tomorow)
                                   ? const Color.fromARGB(255, 28, 151, 132)
                                   : Colors.transparent,
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () => buttonNotifier.value = 1,
+                                onTap: () =>
+                                    buttonNotifier.value = Priorities.tomorow,
                                 child: const Text(
                                   'Tomorrow',
                                   style: TextStyle(
@@ -134,8 +137,8 @@ class ScreenHome extends StatelessWidget {
 
                         //Next-Week-Button-Container
                         Material(
-                          elevation: (newValue == 2) ? 5 : 0,
-                          borderRadius: (newValue == 2)
+                          elevation: (newValue == Priorities.nextweek) ? 5 : 0,
+                          borderRadius: (newValue == Priorities.nextweek)
                               ? BorderRadius.circular(20)
                               : null,
                           color: Colors.transparent,
@@ -144,13 +147,14 @@ class ScreenHome extends StatelessWidget {
                             height: height * 0.04,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              color: (newValue == 2)
+                              color: (newValue == Priorities.nextweek)
                                   ? const Color.fromARGB(255, 28, 151, 132)
                                   : Colors.transparent,
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () => buttonNotifier.value = 2,
+                                onTap: () =>
+                                    buttonNotifier.value = Priorities.nextweek,
                                 child: const Text(
                                   'Next Week',
                                   style: TextStyle(
@@ -170,7 +174,10 @@ class ScreenHome extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (ctx) => ScreenAddEditTask(taskMode: TaskMode.addTask)));
+        },
         label: const Icon(
           Icons.add,
           color: Color.fromARGB(255, 28, 151, 132),

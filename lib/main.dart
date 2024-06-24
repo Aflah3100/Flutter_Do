@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_do/screens/home_screen.dart';
+import 'package:flutter_do/screens/home_screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'OpenSans',
-       
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),

@@ -84,6 +84,10 @@ flutter:
     - family: PlayWriteNGModern
       fonts:
         - asset: assets/fonts/PlaywriteNGModern-Regular.ttf
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik-Medium.ttf
+        - asset: assets/fonts/Rubik-SemiBold.ttf
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
