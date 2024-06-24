@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_do/screens/home_screen/home_screen.dart';
+import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,9 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ScreenHome(
-
-      ),
+      home: ScreenSignUpLogin(initialMode: UserMode.signup)
     );
   }
 }
