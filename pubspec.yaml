@@ -73,6 +73,9 @@ flutter:
     - family: PlayWriteNGModern
       fonts:
         - asset: assets/fonts/PlaywriteNGModern-Regular.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
     - family: Rubik
       fonts:
         - asset: assets/fonts/Rubik-Medium.ttf

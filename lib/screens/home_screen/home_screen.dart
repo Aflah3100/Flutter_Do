@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firebase_auth/firebase_auth_functions.dart';
+import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
 import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
 import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
 
@@ -87,7 +89,7 @@ class ScreenHome extends StatelessWidget {
                 ),
               ),
 
-              //Button Rows
+              //Button Rows Builder
               ValueListenableBuilder(
                   valueListenable: buttonNotifier,
                   builder: (ctx, newValue, _) {
@@ -112,8 +114,9 @@ class ScreenHome extends StatelessWidget {
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () =>
-                                    buttonNotifier.value = Priorities.today,
+                                onTap: () {
+                                  buttonNotifier.value = Priorities.today;
+                                },
                                 child: const Text(
                                   'Today',
                                   style: TextStyle(
@@ -144,8 +147,9 @@ class ScreenHome extends StatelessWidget {
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () =>
-                                    buttonNotifier.value = Priorities.tomorow,
+                                onTap: () {
+                                  buttonNotifier.value = Priorities.tomorow;
+                                },
                                 child: const Text(
                                   'Tomorrow',
                                   style: TextStyle(
@@ -176,8 +180,9 @@ class ScreenHome extends StatelessWidget {
                             ),
                             child: Center(
                               child: GestureDetector(
-                                onTap: () =>
-                                    buttonNotifier.value = Priorities.nextweek,
+                                onTap: () {
+                                  buttonNotifier.value = Priorities.nextweek;
+                                },
                                 child: const Text(
                                   'Next Week',
                                   style: TextStyle(
@@ -191,6 +196,81 @@ class ScreenHome extends StatelessWidget {
                         )
                       ],
                     );
+                  }),
+
+              ValueListenableBuilder(
+                  valueListenable: buttonNotifier,
+                  builder: (ctx, newVal, _) {
+                    return //Tasks-Stream
+                        StreamBuilder(
+                            stream: FireStoreFunctions.instance
+                                .fetchTaskByPriority(buttonNotifier.value),
+                            builder: (ctx, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasData) {
+                                return Expanded(
+                                  child: ListView.separated(
+                                      itemBuilder: (ctx, index) {
+                                        TaskModel currentTask =
+                                            TaskModel.fromMap(snapshot
+                                                .data!.docs[index]
+                                                .data());
+                                        return Center(
+                                          //List-Tile-Widget
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (ctx) =>
+                                                          ScreenAddEditTask(
+                                                            taskMode: TaskMode
+                                                                .editTask,
+                                                            task: currentTask
+                                                                .task,
+                                                            description: currentTask
+                                                                .taskDescription,
+                                                            taskId: currentTask
+                                                                .taskId,
+                                                          )));
+                                            },
+                                            child: ListTile(
+                                              title: Center(
+                                                child: Text(
+                                                  currentTask.task,
+                                                  style: const TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontFamily: 'Poppins',
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                              subtitle: Center(
+                                                child: Text(
+                                                  currentTask.taskDescription ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Poppins'),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (ctx, index) =>
+                                          SizedBox(
+                                            height: height * 0.01,
+                                          ),
+                                      itemCount: snapshot.data!.docs.length),
+                                );
+                              } else {
+                                return const Center(
+                                  child: Text('No Tasks!'),
+                                );
+                              }
+                            });
                   })
             ],
           ),
