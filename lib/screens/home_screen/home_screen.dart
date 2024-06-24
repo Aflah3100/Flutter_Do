@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_do/firebase/firebase_auth/firebase_auth_functions.dart';
 import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
+import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
 
+// ignore: must_be_immutable
 class ScreenHome extends StatelessWidget {
-  const ScreenHome({super.key});
+  ScreenHome({super.key, required this.userName});
+
+  String userName;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +41,31 @@ class ScreenHome extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //User name Text
-                    const Text(
-                      'HELLO\nUSER',
-                      style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        //User name Text
+                        Text(
+                          'HELLO\n${userName.toUpperCase()}',
+                          style: const TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        //Sign-Out-Button
+                        IconButton(
+                            onPressed: () {
+                              FirebaseAuthFunctions.instance.signOutUser();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (ctx) => ScreenSignUpLogin(
+                                          initialMode: UserMode.login)));
+                            },
+                            icon: const Icon(
+                              Icons.logout_rounded,
+                              color: Colors.red,
+                            ))
+                      ],
                     ),
                     SizedBox(
                       height: height * 0.02,

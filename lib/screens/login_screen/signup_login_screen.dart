@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_do/firebase/firebase_auth/firebase_auth_functions.dart';
+import 'package:flutter_do/screens/home_screen/home_screen.dart';
 
 enum UserMode { login, signup }
 
@@ -12,6 +15,7 @@ class ScreenSignUpLogin extends StatelessWidget {
 
   //keys
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   //controllers
   final nameController = TextEditingController();
@@ -23,6 +27,7 @@ class ScreenSignUpLogin extends StatelessWidget {
     final width = MediaQuery.of(context).size.width * 1;
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
+      key: scaffoldKey,
       body: SingleChildScrollView(
         //Base-Column
         child: Column(
@@ -149,9 +154,50 @@ class ScreenSignUpLogin extends StatelessWidget {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(30.0))),
                                   child: ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       //Validate Crentials
-                                      if (formKey.currentState!.validate()) {}
+                                      if (formKey.currentState!.validate()) {
+                                        dynamic result;
+                                        if (userModeNotifier.value ==
+                                            UserMode.signup) {
+                                          result = await FirebaseAuthFunctions
+                                              .instance
+                                              .regsiterNewUser(
+                                                  nameController.text,
+                                                  emailController.text,
+                                                  passwordController.text);
+                                        } else {
+                                          result = await FirebaseAuthFunctions
+                                              .instance
+                                              .authenticateUser(
+                                                  emailController.text,
+                                                  passwordController.text);
+                                        }
+                                        if (result is User) {
+                                          //User-Authentication-Successfull
+                                          final userName = result.displayName;
+                                          Navigator.of(
+                                                  scaffoldKey.currentContext!)
+                                              .pushReplacement(
+                                                  MaterialPageRoute(
+                                                      builder: (ctx) =>
+                                                          ScreenHome(
+                                                              userName:
+                                                                  userName!)));
+                                        } else if (result
+                                            is FirebaseAuthException) {
+                                          //User-Authentication-Failed
+                                          ScaffoldMessenger.of(
+                                                  scaffoldKey.currentContext!)
+                                              .showSnackBar(SnackBar(
+                                                  backgroundColor: Colors.red,
+                                                  content: Text(
+                                                    result.code,
+                                                    style: const TextStyle(
+                                                        fontSize: 18.0),
+                                                  )));
+                                        }
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:
