@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_do/database/models/task_model.dart';
-import 'package:flutter_do/firebase/collections.dart';
-import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
+import 'package:flutter_do/utils/firestore_collections.dart';
 import 'package:flutter_do/utils/enums.dart';
 
+//Firebase-FireStore-Functions
 class FireStoreFunctions {
   //Singleton-Object
   FireStoreFunctions._internal();
@@ -62,19 +62,6 @@ class FireStoreFunctions {
     }
   }
 
-  //Delete-Task-On-Firebase
-  Future<dynamic> deleteTask({required String taskId}) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection(taskCollections)
-          .doc(taskId)
-          .delete();
-      return true;
-    } on FirebaseException catch (e) {
-      return e;
-    }
-  }
-
   //Update-Task-Status
   Future<dynamic> updateTaskStatus(
       {required String taskId, required bool status}) async {
@@ -83,6 +70,19 @@ class FireStoreFunctions {
           .collection(taskCollections)
           .doc(taskId)
           .update({"Task Status": status});
+      return true;
+    } on FirebaseException catch (e) {
+      return e;
+    }
+  }
+
+  //Delete-Task-On-Firebase
+  Future<dynamic> deleteTask({required String taskId}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(taskCollections)
+          .doc(taskId)
+          .delete();
       return true;
     } on FirebaseException catch (e) {
       return e;

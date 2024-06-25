@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
+import 'package:flutter_do/screens/add_edit_task_screen/widgets/task_text_form_field.dart';
+import 'package:flutter_do/screens/add_edit_task_screen/widgets/user_priority_builder.dart';
 import 'package:flutter_do/utils/enums.dart';
-
 
 // ignore: must_be_immutable
 class ScreenAddEditTask extends StatelessWidget {
@@ -12,8 +13,11 @@ class ScreenAddEditTask extends StatelessWidget {
       this.task,
       this.description,
       this.taskId});
+
+  //User-Task-Mode
   TaskMode taskMode;
 
+  //TextField-Focus-Nodes
   final _taskFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
 
@@ -28,7 +32,7 @@ class ScreenAddEditTask extends StatelessWidget {
   final taskController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  //Task Details (For-Edit-Task)
+  //Task Details -> (For-Edit-Task)
   String? task;
   String? description;
   late String? taskId;
@@ -87,63 +91,13 @@ class ScreenAddEditTask extends StatelessWidget {
                   ),
 
                   //Task-Textfield-Form
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        //Task-TextField
-                        TextFormField(
-                          controller: taskController,
-                          focusNode: _taskFocusNode,
-                          maxLines: 1,
-                          validator: (task) => (task == null || task.isEmpty)
-                              ? 'Task is Empty'
-                              : null,
-                          decoration: InputDecoration(
-                              hintText: 'Task',
-                              hintStyle: const TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w700),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.blueGrey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      color: Colors.blue, width: 2.0))),
-                        ),
-                        SizedBox(
-                          height: height * 0.05,
-                        ),
-
-                        //Description-TextField
-                        TextFormField(
-                          controller: descriptionController,
-                          focusNode: _descriptionFocusNode,
-                          maxLength: 40,
-                          maxLines: 2,
-                          decoration: InputDecoration(
-                              hintText: 'Description',
-                              hintStyle: const TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.w700),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.blueGrey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      color: Colors.blueAccent, width: 2.0))),
-                        ),
-
-                        SizedBox(
-                          height: height * 0.02,
-                        ),
-                      ],
-                    ),
-                  ),
+                  TaskTextFormField(
+                      formKey: formKey,
+                      taskController: taskController,
+                      taskFocusNode: _taskFocusNode,
+                      height: height,
+                      descriptionController: descriptionController,
+                      descriptionFocusNode: _descriptionFocusNode),
 
                   //Priority-Text
                   const Text(
@@ -159,88 +113,10 @@ class ScreenAddEditTask extends StatelessWidget {
                   ),
 
                   //Priroty-Container-Row
-                  ValueListenableBuilder(
-                      valueListenable: priorityNotifier,
-                      builder: (ctx, priority, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            //Today-Container
-                            Container(
-                              width: width * 0.20,
-                              height: height * 0.04,
-                              decoration: BoxDecoration(
-                                  color: (priority == Priorities.today)
-                                      ? const Color.fromARGB(255, 10, 215, 238)
-                                      : Colors.transparent,
-                                  border: Border.all(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      priorityNotifier.value = Priorities.today,
-                                  child: const Text(
-                                    'Today',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            //Tomorrow-Container
-                            Container(
-                              width: width * 0.25,
-                              height: height * 0.04,
-                              decoration: BoxDecoration(
-                                  color: (priority == Priorities.tomorow)
-                                      ? const Color.fromARGB(255, 10, 215, 238)
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      color: const Color.fromARGB(
-                                          255, 128, 116, 6)),
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () => priorityNotifier.value =
-                                      Priorities.tomorow,
-                                  child: const Text(
-                                    'Tomorrow',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            //NextWeek-Container
-                            Container(
-                              width: width * 0.28,
-                              height: height * 0.04,
-                              decoration: BoxDecoration(
-                                  color: (priority == Priorities.nextweek)
-                                      ? const Color.fromARGB(255, 10, 215, 238)
-                                      : Colors.transparent,
-                                  border: Border.all(color: Colors.green),
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () => priorityNotifier.value =
-                                      Priorities.nextweek,
-                                  child: const Text(
-                                    'Next Week',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
+                  UserPriorityBuilder(
+                      priorityNotifier: priorityNotifier,
+                      width: width,
+                      height: height),
                   SizedBox(
                     height: height * 0.06,
                   ),
@@ -250,13 +126,14 @@ class ScreenAddEditTask extends StatelessWidget {
                     onTap: () async {
                       dynamic result;
 
+                      //Delete-Edited-Task
                       if (taskMode == TaskMode.editTask &&
                           taskController.text.isEmpty &&
                           descriptionController.text.isEmpty) {
-                        // Delete task if both task and description are empty
                         result = await FireStoreFunctions.instance
                             .deleteTask(taskId: taskId!);
                       } else if (formKey.currentState!.validate()) {
+                        //Task-Priority
                         String taskPriority;
                         if (priorityNotifier.value == Priorities.today) {
                           taskPriority = "Today";
@@ -267,6 +144,7 @@ class ScreenAddEditTask extends StatelessWidget {
                           taskPriority = "Next Week";
                         }
 
+                        //Add-Task-Function
                         if (taskMode == TaskMode.addTask) {
                           final task = TaskModel(
                               taskId: DateTime.now()
@@ -274,20 +152,24 @@ class ScreenAddEditTask extends StatelessWidget {
                                   .toString(),
                               task: taskController.text,
                               taskDescription: descriptionController.text,
-                              taskPriority: taskPriority, taskStatus: false);
+                              taskPriority: taskPriority,
+                              taskStatus: false);
                           result = await FireStoreFunctions.instance
                               .saveTask(task: task);
-                        } else {
+                        }
+                        //Edit-Task-Function
+                        else {
                           TaskModel task = TaskModel(
                               taskId: taskId!,
                               task: taskController.text,
                               taskDescription: descriptionController.text,
-                              taskPriority: taskPriority, taskStatus: false);
+                              taskPriority: taskPriority,
+                              taskStatus: false);
                           result = await FireStoreFunctions.instance
                               .updateTask(task: task);
                         }
                       }
-
+                      //Validating-Results
                       if (result is bool) {
                         //Task-Added-Or-Updated-To-Database
                         Navigator.of(scaffoldKey.currentContext!).pop();
