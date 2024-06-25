@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firebase_auth/firebase_auth_functions.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
 import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
+import 'package:flutter_do/screens/home_screen/widgets/slidable_task_card.dart';
 import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 // ignore: must_be_immutable
 class ScreenHome extends StatelessWidget {
@@ -12,6 +15,8 @@ class ScreenHome extends StatelessWidget {
   String userName;
 
   ValueNotifier<Priorities> buttonNotifier = ValueNotifier(Priorities.today);
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   //Get-Hour-Function
   String getHour() {
@@ -32,6 +37,7 @@ class ScreenHome extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
+      key: scaffoldKey,
       body: SafeArea(
         top: false,
 
@@ -212,6 +218,7 @@ class ScreenHome extends StatelessWidget {
                     );
                   }),
 
+              //Tasks-Builder
               ValueListenableBuilder(
                   valueListenable: buttonNotifier,
                   builder: (ctx, newVal, _) {
@@ -253,36 +260,10 @@ class ScreenHome extends StatelessWidget {
                                                                       .taskId,
                                                             )));
                                               },
-                                              //List-Tile-Card-Widget
-                                              child: Card(
-                                                color: Colors.transparent,
-                                                elevation: 1,
-                                                shadowColor:
-                                                    const Color.fromARGB(
-                                                        255, 228, 227, 227),
-                                                child: ListTile(
-                                                  title: Center(
-                                                    child: Text(
-                                                      currentTask.task,
-                                                      style: const TextStyle(
-                                                          fontSize: 20.0,
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ),
-                                                  subtitle: Center(
-                                                    child: Text(
-                                                      currentTask
-                                                              .taskDescription ??
-                                                          "",
-                                                      style: const TextStyle(
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              //Task-Card-Slidable-Widget
+                                              child: SlidableTaskCard(
+                                                  currentTask: currentTask,
+                                                  scaffoldKey: scaffoldKey),
                                             ),
                                           );
                                         },

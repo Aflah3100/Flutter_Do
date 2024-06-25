@@ -4,8 +4,8 @@ import 'package:flutter_do/firebase/collections.dart';
 import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
 
 class FireStoreFunctions {
+  
   //Singleton-Object
-
   FireStoreFunctions._internal();
   static FireStoreFunctions instance = FireStoreFunctions._internal();
   factory FireStoreFunctions() => instance;
