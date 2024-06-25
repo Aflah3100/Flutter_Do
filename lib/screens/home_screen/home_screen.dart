@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firebase_auth/firebase_auth_functions.dart';
@@ -6,7 +5,7 @@ import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
 import 'package:flutter_do/screens/add_edit_task_screen/screen_add_edit_task.dart';
 import 'package:flutter_do/screens/home_screen/widgets/slidable_task_card.dart';
 import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_do/utils/enums.dart';
 
 // ignore: must_be_immutable
 class ScreenHome extends StatelessWidget {
@@ -83,9 +82,19 @@ class ScreenHome extends StatelessWidget {
                                       builder: (ctx) => ScreenSignUpLogin(
                                           initialMode: UserMode.login)));
                             },
-                            icon: const Icon(
-                              Icons.logout_rounded,
-                              color: Colors.red,
+                            icon: const Row(
+                              children: [
+                                //Sign-Out-Icon
+                                Icon(
+                                  Icons.logout_rounded,
+                                  color: Colors.red,
+                                ),
+                                //Sign-Out-Text
+                                Text(
+                                  'Sign Out',
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              ],
                             ))
                       ],
                     ),
