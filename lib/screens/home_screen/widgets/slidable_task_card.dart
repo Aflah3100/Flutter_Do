@@ -22,10 +22,20 @@ class SlidableTaskCard extends StatelessWidget {
       key: Key(currentTask.taskId),
       startActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) {
+            if (currentTask.taskStatus) {
+              FireStoreFunctions.instance
+                  .updateTaskStatus(taskId: currentTask.taskId, status: false);
+            } else {
+              FireStoreFunctions.instance
+                  .updateTaskStatus(taskId: currentTask.taskId, status: true);
+            }
+          },
           icon: Icons.check,
-          label: 'Completed',
-          foregroundColor: Colors.green.shade900,
+          label: (!currentTask.taskStatus) ? 'Completed' : 'Not Complete',
+          foregroundColor: (!currentTask.taskStatus)
+              ? Colors.green.shade900
+              : Colors.red.shade300,
           backgroundColor: Colors.transparent,
         ),
       ]),
@@ -69,6 +79,13 @@ class SlidableTaskCard extends StatelessWidget {
         elevation: 1,
         shadowColor: const Color.fromARGB(255, 228, 227, 227),
         child: ListTile(
+          leading: (currentTask.taskStatus)
+              ? CircleAvatar(
+                  child: ClipRRect(
+                    child: Image.asset('assets/images/tick-icon-image.png'),
+                  ),
+                )
+              : null,
           title: Center(
             child: Text(
               currentTask.task,

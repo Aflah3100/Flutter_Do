@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
+import 'package:flutter_do/utils/enums.dart';
 
-enum TaskMode { addTask, editTask }
-
-enum Priorities { today, tomorow, nextweek }
 
 // ignore: must_be_immutable
 class ScreenAddEditTask extends StatelessWidget {
@@ -276,7 +274,7 @@ class ScreenAddEditTask extends StatelessWidget {
                                   .toString(),
                               task: taskController.text,
                               taskDescription: descriptionController.text,
-                              taskPriority: taskPriority);
+                              taskPriority: taskPriority, taskStatus: false);
                           result = await FireStoreFunctions.instance
                               .saveTask(task: task);
                         } else {
@@ -284,7 +282,7 @@ class ScreenAddEditTask extends StatelessWidget {
                               taskId: taskId!,
                               task: taskController.text,
                               taskDescription: descriptionController.text,
-                              taskPriority: taskPriority);
+                              taskPriority: taskPriority, taskStatus: false);
                           result = await FireStoreFunctions.instance
                               .updateTask(task: task);
                         }

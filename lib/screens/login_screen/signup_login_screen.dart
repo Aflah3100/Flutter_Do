@@ -201,13 +201,14 @@ class ScreenSignUpLogin extends StatelessWidget {
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:
-                                            const Color(0xFF273671)),
+                                            const Color(0xFF00C9FF)),
                                     child: Text(
                                       (userMode == UserMode.signup)
                                           ? 'Sign Up'
                                           : 'Log In',
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ),
                                 ),
