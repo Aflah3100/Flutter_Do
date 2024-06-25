@@ -61,4 +61,17 @@ class FireStoreFunctions {
       return e;
     }
   }
+
+  //Delete-Task-On-Firebase
+  Future<dynamic> deleteTask({required String taskId}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(taskCollections)
+          .doc(taskId)
+          .delete();
+      return true;
+    } on FirebaseException catch (e) {
+      return e;
+    }
+  }
 }

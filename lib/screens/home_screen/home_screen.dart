@@ -11,11 +11,25 @@ class ScreenHome extends StatelessWidget {
 
   String userName;
 
+  ValueNotifier<Priorities> buttonNotifier = ValueNotifier(Priorities.today);
+
+  //Get-Hour-Function
+  String getHour() {
+    final hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return "Good Morning";
+    } else if (hour < 18) {
+      return "Good Afternoon";
+    } else {
+      return "Good Evening";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
-    ValueNotifier<Priorities> buttonNotifier = ValueNotifier(Priorities.today);
 
     return Scaffold(
       body: SafeArea(
@@ -74,10 +88,10 @@ class ScreenHome extends StatelessWidget {
                     ),
 
                     //Good Morning Text
-                    const Text(
-                      'Good Morning',
-                      style: TextStyle(
-                          color: Colors.white,
+                    Text(
+                      getHour(),
+                      style: const TextStyle(
+                          color: Color.fromARGB(153, 34, 34, 34),
                           fontSize: 25.0,
                           fontFamily: 'PlayWriteNGModern',
                           fontWeight: FontWeight.w600),
@@ -211,63 +225,98 @@ class ScreenHome extends StatelessWidget {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               } else if (snapshot.hasData) {
-                                return Expanded(
-                                  child: ListView.separated(
-                                      itemBuilder: (ctx, index) {
-                                        TaskModel currentTask =
-                                            TaskModel.fromMap(snapshot
-                                                .data!.docs[index]
-                                                .data());
-                                        return Center(
-                                          //List-Tile-Widget
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (ctx) =>
-                                                          ScreenAddEditTask(
-                                                            taskMode: TaskMode
-                                                                .editTask,
-                                                            task: currentTask
-                                                                .task,
-                                                            description: currentTask
-                                                                .taskDescription,
-                                                            taskId: currentTask
-                                                                .taskId,
-                                                          )));
-                                            },
-                                            child: ListTile(
-                                              title: Center(
-                                                child: Text(
-                                                  currentTask.task,
-                                                  style: const TextStyle(
-                                                      fontSize: 20.0,
-                                                      fontFamily: 'Poppins',
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                              subtitle: Center(
-                                                child: Text(
-                                                  currentTask.taskDescription ??
-                                                      "",
-                                                  style: const TextStyle(
-                                                      fontFamily: 'Poppins'),
+                                if ((snapshot.data!.docs.isNotEmpty)) {
+                                  return Expanded(
+                                    child: ListView.separated(
+                                        itemBuilder: (ctx, index) {
+                                          TaskModel currentTask =
+                                              TaskModel.fromMap(snapshot
+                                                  .data!.docs[index]
+                                                  .data());
+                                          return Center(
+                                            //List-Tile-Widget
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (ctx) =>
+                                                            ScreenAddEditTask(
+                                                              taskMode: TaskMode
+                                                                  .editTask,
+                                                              task: currentTask
+                                                                  .task,
+                                                              description:
+                                                                  currentTask
+                                                                      .taskDescription,
+                                                              taskId:
+                                                                  currentTask
+                                                                      .taskId,
+                                                            )));
+                                              },
+                                              //List-Tile-Card-Widget
+                                              child: Card(
+                                                color: Colors.transparent,
+                                                elevation: 1,
+                                                shadowColor:
+                                                    const Color.fromARGB(
+                                                        255, 228, 227, 227),
+                                                child: ListTile(
+                                                  title: Center(
+                                                    child: Text(
+                                                      currentTask.task,
+                                                      style: const TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                  subtitle: Center(
+                                                    child: Text(
+                                                      currentTask
+                                                              .taskDescription ??
+                                                          "",
+                                                      style: const TextStyle(
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      separatorBuilder: (ctx, index) =>
-                                          SizedBox(
-                                            height: height * 0.01,
-                                          ),
-                                      itemCount: snapshot.data!.docs.length),
-                                );
+                                          );
+                                        },
+                                        separatorBuilder: (ctx, index) =>
+                                            SizedBox(
+                                              height: height * 0.01,
+                                            ),
+                                        itemCount: snapshot.data!.docs.length),
+                                  );
+                                } else {
+                                  return const Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'No Tasks!',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 25.0,
+                                            backgroundColor: Colors.transparent,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  );
+                                }
                               } else {
                                 return const Center(
-                                  child: Text('No Tasks!'),
+                                  child: Text(
+                                    'Error in Fetching Tasks!',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 20.0,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 );
                               }
                             });

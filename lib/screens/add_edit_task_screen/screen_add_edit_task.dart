@@ -250,7 +250,15 @@ class ScreenAddEditTask extends StatelessWidget {
                   //Add-Edit-Task-Button-Container
                   GestureDetector(
                     onTap: () async {
-                      if (formKey.currentState!.validate()) {
+                      dynamic result;
+
+                      if (taskMode == TaskMode.editTask &&
+                          taskController.text.isEmpty &&
+                          descriptionController.text.isEmpty) {
+                        // Delete task if both task and description are empty
+                        result = await FireStoreFunctions.instance
+                            .deleteTask(taskId: taskId!);
+                      } else if (formKey.currentState!.validate()) {
                         String taskPriority;
                         if (priorityNotifier.value == Priorities.today) {
                           taskPriority = "Today";
@@ -260,7 +268,6 @@ class ScreenAddEditTask extends StatelessWidget {
                         } else {
                           taskPriority = "Next Week";
                         }
-                        dynamic result;
 
                         if (taskMode == TaskMode.addTask) {
                           final task = TaskModel(
@@ -281,20 +288,20 @@ class ScreenAddEditTask extends StatelessWidget {
                           result = await FireStoreFunctions.instance
                               .updateTask(task: task);
                         }
+                      }
 
-                        if (result is bool) {
-                          //Task-Added-Or-Updated-To-Database
-                          Navigator.of(scaffoldKey.currentContext!).pop();
-                        } else {
-                          //Error
-                          ScaffoldMessenger.of(scaffoldKey.currentContext!)
-                              .showSnackBar(SnackBar(
-                                  backgroundColor: Colors.red,
-                                  content: Text(
-                                    result.code,
-                                    style: const TextStyle(fontSize: 18.0),
-                                  )));
-                        }
+                      if (result is bool) {
+                        //Task-Added-Or-Updated-To-Database
+                        Navigator.of(scaffoldKey.currentContext!).pop();
+                      } else {
+                        //Error
+                        ScaffoldMessenger.of(scaffoldKey.currentContext!)
+                            .showSnackBar(SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  result.code,
+                                  style: const TextStyle(fontSize: 18.0),
+                                )));
                       }
                     },
                     child: Container(
