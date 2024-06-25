@@ -18,8 +18,11 @@ class SlidableTaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Slidable-Widget
     return Slidable(
       key: Key(currentTask.taskId),
+
+      //Start-Action
       startActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
           onPressed: (ctx) {
@@ -39,6 +42,8 @@ class SlidableTaskCard extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
       ]),
+
+      //End-Action
       endActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
           onPressed: (ctx) async {
@@ -73,6 +78,7 @@ class SlidableTaskCard extends StatelessWidget {
           foregroundColor: Colors.red.shade600,
         )
       ]),
+
       //List-Tile-Card-Widget
       child: Card(
         color: Colors.transparent,

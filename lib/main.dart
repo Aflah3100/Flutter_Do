@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/screens/home_screen/home_screen.dart';
 import 'package:flutter_do/screens/login_screen/signup_login_screen.dart';
+import 'package:flutter_do/utils/enums.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//User-Authentication-Check-Widget
 class AuthCheck extends StatelessWidget {
   const AuthCheck({super.key});
 
