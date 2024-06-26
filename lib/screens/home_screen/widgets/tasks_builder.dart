@@ -13,6 +13,7 @@ class TasksBuilder extends StatelessWidget {
     required this.height,
   });
 
+  //Return-taskPriority-Object.
   Priorities getTaskPriority(String taskPriority) {
     if (taskPriority == "Today") {
       return Priorities.today;

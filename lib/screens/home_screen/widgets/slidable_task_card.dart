@@ -101,12 +101,14 @@ class SlidableTaskCard extends StatelessWidget {
                   fontWeight: FontWeight.w500),
             ),
           ),
-          subtitle: Center(
-            child: Text(
-              currentTask.taskDescription ?? "",
-              style: const TextStyle(fontFamily: 'Poppins'),
-            ),
-          ),
+          subtitle: (currentTask.taskDescription!.isNotEmpty)
+              ? Center(
+                  child: Text(
+                    currentTask.taskDescription ?? "",
+                    style: const TextStyle(fontFamily: 'Poppins'),
+                  ),
+                )
+              : null,
         ),
       ),
     );
