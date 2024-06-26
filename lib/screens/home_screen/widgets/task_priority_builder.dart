@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_do/utils/enums.dart';
 
@@ -54,7 +53,7 @@ class TaskPriorityBuilder extends StatelessWidget {
                   ),
                 ),
               ),
-    
+
               //Tomorrow-Button-Container
               Material(
                 elevation: (newValue == Priorities.tomorow) ? 5 : 0,
@@ -87,7 +86,7 @@ class TaskPriorityBuilder extends StatelessWidget {
                   ),
                 ),
               ),
-    
+
               //Next-Week-Button-Container
               Material(
                 elevation: (newValue == Priorities.nextweek) ? 5 : 0,
@@ -119,7 +118,7 @@ class TaskPriorityBuilder extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           );
         });

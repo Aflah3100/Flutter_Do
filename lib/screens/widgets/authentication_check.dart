@@ -25,7 +25,9 @@ class AuthenticationCheck extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           final name = snapshot.data!.displayName ?? "USER";
-          return ScreenHome(userName: name);
+          return ScreenHome(
+            userName: name,
+          );
         } else {
           return ScreenSignUpLogin(initialMode: UserMode.signup);
         }

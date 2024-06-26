@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
@@ -7,13 +8,14 @@ import 'package:flutter_do/utils/enums.dart';
 
 // ignore: must_be_immutable
 class ScreenAddEditTask extends StatelessWidget {
-  ScreenAddEditTask(
-      {super.key,
-      required this.taskMode,
-      this.task,
-      this.description,
-      this.taskId,
-      required this.taskPriority});
+  ScreenAddEditTask({
+    super.key,
+    required this.taskMode,
+    this.task,
+    this.description,
+    this.taskId,
+    required this.taskPriority,
+  });
 
   //User-Task-Mode
   TaskMode taskMode;
@@ -178,8 +180,17 @@ class ScreenAddEditTask extends StatelessWidget {
                       if (result is bool) {
                         //Task-Added-Or-Updated-To-Database
                         Navigator.of(scaffoldKey.currentContext!).pop();
+                      } else if (result is FirebaseAuthException) {
+                        //Error-Fetching-Current-User
+                        ScaffoldMessenger.of(scaffoldKey.currentContext!)
+                            .showSnackBar(SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  result.message!,
+                                  style: const TextStyle(fontSize: 18.0),
+                                )));
                       } else {
-                        //Error
+                        //Error-Saving-Or-Updating-Task
                         ScaffoldMessenger.of(scaffoldKey.currentContext!)
                             .showSnackBar(SnackBar(
                                 backgroundColor: Colors.red,

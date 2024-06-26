@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
@@ -26,12 +27,24 @@ class SlidableTaskCard extends StatelessWidget {
       startActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
           onPressed: (ctx) {
+            dynamic result;
             if (currentTask.taskStatus) {
-              FireStoreFunctions.instance
+              result = FireStoreFunctions.instance
                   .updateTaskStatus(taskId: currentTask.taskId, status: false);
             } else {
-              FireStoreFunctions.instance
+              result = FireStoreFunctions.instance
                   .updateTaskStatus(taskId: currentTask.taskId, status: true);
+            }
+            //Error-Snack-Bar
+            if (result is FirebaseException ||
+                result is FirebaseAuthException) {
+              ScaffoldMessenger.of(scaffoldKey.currentContext!)
+                  .showSnackBar(SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(
+                        result.message!,
+                        style: const TextStyle(fontSize: 18.0),
+                      )));
             }
           },
           icon: Icons.check,
@@ -62,7 +75,7 @@ class SlidableTaskCard extends StatelessWidget {
                         ),
                       )));
             } else {
-              //Error
+              //Error-Snack-Bar
               ScaffoldMessenger.of(scaffoldKey.currentContext!)
                   .showSnackBar(SnackBar(
                       backgroundColor: Colors.red,

@@ -42,6 +42,7 @@ class TasksBuilder extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasData) {
                       if ((snapshot.data!.docs.isNotEmpty)) {
+                        //Docs-Not-Empty
                         return Expanded(
                           child: ListView.separated(
                               itemBuilder: (ctx, index) {
@@ -80,6 +81,7 @@ class TasksBuilder extends StatelessWidget {
                               itemCount: snapshot.data!.docs.length),
                         );
                       } else {
+                        //Docs-Empty
                         return const Expanded(
                           child: Center(
                             child: Text(
@@ -94,10 +96,23 @@ class TasksBuilder extends StatelessWidget {
                           ),
                         );
                       }
-                    } else {
+                    } else if (snapshot.hasError) {
+                      //Error-Fecthing-Current-User-Text
                       return const Center(
                         child: Text(
-                          'Error in Fetching Tasks!',
+                          'Error Fetchhing User!',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 20.0,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    } else {
+                      //Unexpected-Error-Text
+                      return const Center(
+                        child: Text(
+                          'Unexpected Error!',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 20.0,
