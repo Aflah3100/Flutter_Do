@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/firebase/firestore/firestore_functions.dart';
@@ -7,22 +8,24 @@ import 'package:flutter_do/utils/enums.dart';
 
 // ignore: must_be_immutable
 class ScreenAddEditTask extends StatelessWidget {
-  ScreenAddEditTask(
-      {super.key,
-      required this.taskMode,
-      this.task,
-      this.description,
-      this.taskId});
+  ScreenAddEditTask({
+    super.key,
+    required this.taskMode,
+    this.task,
+    this.description,
+    this.taskId,
+    required this.taskPriority,
+  });
 
   //User-Task-Mode
   TaskMode taskMode;
 
+  //Task-Priority
+  Priorities taskPriority;
+
   //TextField-Focus-Nodes
   final _taskFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-
-  //priority-notifier
-  ValueNotifier<Priorities> priorityNotifier = ValueNotifier(Priorities.today);
 
   //keys
   final formKey = GlobalKey<FormState>();
@@ -41,6 +44,10 @@ class ScreenAddEditTask extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height * 1;
     final width = MediaQuery.sizeOf(context).width * 1;
+
+    //Task-Priority-Notifier
+    ValueNotifier<Priorities> priorityNotifier = ValueNotifier(taskPriority);
+
     (taskMode == TaskMode.editTask) ? taskController.text = task ?? "" : null;
     (taskMode == TaskMode.editTask)
         ? descriptionController.text = description ?? ""
@@ -173,8 +180,17 @@ class ScreenAddEditTask extends StatelessWidget {
                       if (result is bool) {
                         //Task-Added-Or-Updated-To-Database
                         Navigator.of(scaffoldKey.currentContext!).pop();
+                      } else if (result is FirebaseAuthException) {
+                        //Error-Fetching-Current-User
+                        ScaffoldMessenger.of(scaffoldKey.currentContext!)
+                            .showSnackBar(SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  result.message!,
+                                  style: const TextStyle(fontSize: 18.0),
+                                )));
                       } else {
-                        //Error
+                        //Error-Saving-Or-Updating-Task
                         ScaffoldMessenger.of(scaffoldKey.currentContext!)
                             .showSnackBar(SnackBar(
                                 backgroundColor: Colors.red,

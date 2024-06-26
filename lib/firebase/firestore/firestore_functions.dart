@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_do/database/models/task_model.dart';
 import 'package:flutter_do/utils/firestore_collections.dart';
 import 'package:flutter_do/utils/enums.dart';
@@ -13,12 +14,21 @@ class FireStoreFunctions {
   //Save-Task-To-Firestore
   Future<dynamic> saveTask({required TaskModel task}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection(taskCollections)
-          .doc(task.taskId)
-          .set(task.toMap());
+      final currentUser = FirebaseAuth.instance.currentUser;
 
-      return true;
+      if (currentUser != null) {
+        await FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .doc(task.taskId)
+            .set(task.toMap());
+
+        return true;
+      } else {
+        return FirebaseAuthException(
+            code: "ERROR_FETCHING_USER", message: "Error fetching user!");
+      }
     } on FirebaseException catch (e) {
       return e;
     }
@@ -27,36 +37,58 @@ class FireStoreFunctions {
   //Fetch-Tasks-By-Priority
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchTaskByPriority(
       Priorities priority) {
-    if (priority == Priorities.today) {
-      return FirebaseFirestore.instance
-          .collection(taskCollections)
-          .where("Task Priority", isEqualTo: "Today")
-          .snapshots();
-    } else if (priority == Priorities.tomorow) {
-      return FirebaseFirestore.instance
-          .collection(taskCollections)
-          .where("Task Priority", isEqualTo: "Tomorrow")
-          .snapshots();
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      if (priority == Priorities.today) {
+        return FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .where("Task Priority", isEqualTo: "Today")
+            .snapshots();
+      } else if (priority == Priorities.tomorow) {
+        return FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .where("Task Priority", isEqualTo: "Tomorrow")
+            .snapshots();
+      } else {
+        return FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .where("Task Priority", isEqualTo: "Next Week")
+            .snapshots();
+      }
     } else {
-      return FirebaseFirestore.instance
-          .collection(taskCollections)
-          .where("Task Priority", isEqualTo: "Next Week")
-          .snapshots();
+      return Stream.error(FirebaseAuthException(
+          code: "ERROR_FETCHING_USER", message: "Error fetching user!"));
     }
   }
 
   //Update-Task-In-Firebase
   Future<dynamic> updateTask({required TaskModel task}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection(taskCollections)
-          .doc(task.taskId)
-          .update({
-        "Task": task.task,
-        "Task Description": task.taskDescription,
-        "Task Priority": task.taskPriority
-      });
-      return true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        await FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .doc(task.taskId)
+            .update({
+          "Task": task.task,
+          "Task Description": task.taskDescription,
+          "Task Priority": task.taskPriority
+        });
+        return true;
+      } else {
+        return FirebaseAuthException(
+            code: "ERROR_FETCHING_USER", message: "Error fetching user!");
+      }
     } on FirebaseException catch (e) {
       return e;
     }
@@ -66,11 +98,19 @@ class FireStoreFunctions {
   Future<dynamic> updateTaskStatus(
       {required String taskId, required bool status}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection(taskCollections)
-          .doc(taskId)
-          .update({"Task Status": status});
-      return true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        await FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .doc(taskId)
+            .update({"Task Status": status});
+        return true;
+      } else {
+        return FirebaseAuthException(
+            code: "Error Fetching User!", message: "Error fetching user!");
+      }
     } on FirebaseException catch (e) {
       return e;
     }
@@ -79,11 +119,20 @@ class FireStoreFunctions {
   //Delete-Task-On-Firebase
   Future<dynamic> deleteTask({required String taskId}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection(taskCollections)
-          .doc(taskId)
-          .delete();
-      return true;
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        await FirebaseFirestore.instance
+            .collection(userCollections)
+            .doc(currentUser.uid)
+            .collection(taskCollections)
+            .doc(taskId)
+            .delete();
+        return true;
+      } else {
+        return FirebaseAuthException(
+            code: "Error Fetching User", message: "Error fetching user!");
+      }
     } on FirebaseException catch (e) {
       return e;
     }
