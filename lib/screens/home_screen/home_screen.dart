@@ -80,7 +80,10 @@ class ScreenHome extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => ScreenAddEditTask(taskMode: TaskMode.addTask)));
+              builder: (ctx) => ScreenAddEditTask(
+                    taskMode: TaskMode.addTask,
+                    taskPriority: buttonNotifier.value,
+                  )));
         },
         label: const Icon(
           Icons.add,

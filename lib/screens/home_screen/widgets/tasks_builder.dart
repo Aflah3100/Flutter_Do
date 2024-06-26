@@ -13,6 +13,16 @@ class TasksBuilder extends StatelessWidget {
     required this.height,
   });
 
+  Priorities getTaskPriority(String taskPriority) {
+    if (taskPriority == "Today") {
+      return Priorities.today;
+    } else if (taskPriority == "Tomorrow") {
+      return Priorities.tomorow;
+    } else {
+      return Priorities.nextweek;
+    }
+  }
+
   final ValueNotifier<Priorities> buttonNotifier;
   final GlobalKey<ScaffoldState> scaffoldKey;
   final double height;
@@ -50,6 +60,10 @@ class TasksBuilder extends StatelessWidget {
                                                     description: currentTask
                                                         .taskDescription,
                                                     taskId: currentTask.taskId,
+                                                    taskPriority:
+                                                        getTaskPriority(
+                                                            currentTask
+                                                                .taskPriority),
                                                   )));
                                     },
                                     //Task-Card-Slidable-Widget

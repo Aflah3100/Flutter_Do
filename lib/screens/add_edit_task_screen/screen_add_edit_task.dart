@@ -12,17 +12,18 @@ class ScreenAddEditTask extends StatelessWidget {
       required this.taskMode,
       this.task,
       this.description,
-      this.taskId});
+      this.taskId,
+      required this.taskPriority});
 
   //User-Task-Mode
   TaskMode taskMode;
 
+  //Task-Priority
+  Priorities taskPriority;
+
   //TextField-Focus-Nodes
   final _taskFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-
-  //priority-notifier
-  ValueNotifier<Priorities> priorityNotifier = ValueNotifier(Priorities.today);
 
   //keys
   final formKey = GlobalKey<FormState>();
@@ -41,6 +42,10 @@ class ScreenAddEditTask extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height * 1;
     final width = MediaQuery.sizeOf(context).width * 1;
+
+    //Task-Priority-Notifier
+    ValueNotifier<Priorities> priorityNotifier = ValueNotifier(taskPriority);
+
     (taskMode == TaskMode.editTask) ? taskController.text = task ?? "" : null;
     (taskMode == TaskMode.editTask)
         ? descriptionController.text = description ?? ""
