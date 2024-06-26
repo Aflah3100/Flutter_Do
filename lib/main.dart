@@ -4,7 +4,6 @@ import 'package:flutter_do/screens/widgets/authentication_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
