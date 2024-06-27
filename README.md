@@ -33,12 +33,24 @@ To get started with Futter_Do App, follow these steps:
 
 ## Screenshots
 
-![Login Screen](screenshots/login-screen.png)
-![Home Screen](screenshots/home-screen.png)
-![Home Screen Containing Tasks](screenshots/all_tasks.png)
-![Creating or Editing Tasks](screenshots/create_new_task.png)
-![Task Marking as Completed](screenshots/task_completion.png)
-![Deleting a Task](screenshots/task_deletion.png)
+### Login Screen
+<img src="screenshots/login-screen.png" alt="Login Screen" width="300"/>
+
+### Home Screen
+<img src="screenshots/home-screen.png" alt="Home Screen" width="300"/>
+
+### Home Screen Containing Tasks
+<img src="screenshots/all_tasks.png" alt="Home Screen Containing Tasks" width="300"/>
+
+### Creating or Editing Tasks
+<img src="screenshots/create_new_task.png" alt="Creating or Editing Tasks" width="300"/>
+
+### Task Marking as Completed
+<img src="screenshots/task_completion.png" alt="Task Marking as Completed" width="300"/>
+
+### Deleting a Task
+<img src="screenshots/task_deletion.png" alt="Deleting a Task" width="300"/>
+
 
 
 
